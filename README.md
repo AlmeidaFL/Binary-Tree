@@ -1,2 +1,2 @@
 # Binary-Tree
-Implementation of a binary tree
+Tree implementation
