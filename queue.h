@@ -2,7 +2,7 @@
 #include <stdbool.h>
 
 typedef struct Node{
-    Node* next;
+    struct Node* next;
     void* value;
 }Node;
 
@@ -20,8 +20,7 @@ Queue insertQueue(Queue A, void* value){
         newer->next = NULL;
         newer->value = value;
         if(A == NULL) A = newer;
-
-        if(A != NULL){
+        else{
             Node* aux = A;
             while(aux->next != NULL){
                 aux = aux->next;
@@ -44,7 +43,6 @@ Queue removeQueue(Queue A){
 }
 
 void clearQueue(Queue A){
-
     while(A != NULL){
         removeQueue(A);
     }
@@ -53,4 +51,9 @@ void clearQueue(Queue A){
 bool emptyQueue(Queue A){
     if(A == NULL) return true;
     return false;
+}
+
+void* firstQueue(Queue A){
+    if(A != NULL) return A->value;
+    return NULL;
 }
