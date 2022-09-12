@@ -3,89 +3,97 @@
 #include <stdbool.h>
 #include "stack.h"
 
-typedef struct Node{
+typedef struct Noded{
     int key;
-    struct Node* father;
-    struct Node* left;
-    struct Node* right;
-}Node;
+    struct Noded* father;
+    struct Noded* left;
+    struct Noded* right;
+}Noded;
 
-typedef Node* Tree;
+typedef Noded* Tree;
 
 Tree insertElement(Tree A, int value);
-Tree insertNode(Tree A, Node* newNode);
+Tree insertNoded(Tree A, Noded* newNoded);
 int getHeight(Tree A);
-Tree removeTree(Tree A, Node * item);
-Node* getMaximumTree(Tree A);
-Node* getMinimum(Tree A);
-Node* comumAncestor(Tree tree, Node* A, Node* B);
-Node* comumAncestorR(Tree tree, Node* A, Node* B);
+Tree removeTree(Tree A, Noded * item);
+Noded* getMaximumTree(Tree A);
+Noded* getMinimum(Tree A);
+Noded* comumAncestor(Tree tree, Noded* A, Noded* B);
+Noded* comumAncestorR(Tree tree, Noded* A, Noded* B);
 Tree removeRoot(Tree A);
 Tree freverter(Tree A);
-Tree removeNode(Tree A, int value);
+Tree removeNoded(Tree A, int value);
 void empty(Tree A);
-Node* select(Tree A, int value);
+Noded* select(Tree A, int value);
+int countBigger(Tree A, int value);
+int countBigger(Tree A, int value);
 
 int main(){
     Tree A = NULL;
-    Node* test;
+    Noded* test;
     A = insertElement(A, 5);
     A = insertElement(A, 9);
+    A = insertElement(A, 1);
+    A = insertElement(A, 10);
+    A = insertElement(A, 2);
+    A = insertElement(A, 6);
     A = insertElement(A, 3);
 
-    test = select(A, 3);
-    printf("\nNode test = %d", test->key);
+    test = select(A, 10);
+    printf("\nNoded test = %d", test->key);
+
+    int count = countBigger(A, 3);
+    int qtdNos = getHeightNotR(A);
 
 
     return 0;
 }
 
 Tree insertElement(Tree A, int value){
-    Node* newNode = malloc(sizeof(Node));
+    Noded* newNoded = malloc(sizeof(Noded));
 
-    if(newNode != NULL){
-        newNode->left = NULL; newNode->right = NULL; newNode->key = value;
+    if(newNoded != NULL){
+        newNoded->left = NULL; newNoded->right = NULL; newNoded->key = value;
         if(A == NULL){ //There's no item in the tree
-            newNode->father = NULL; A = newNode;
+            newNoded->father = NULL; A = newNoded;
         }else{ //There's item in the tree
-            Node* aux = A, *pre;
-            Node* aux = A, *pre;
-            while(aux != NULL){ //Serching newNode's father
+            Noded* aux = A, *pre;
+            while(aux != NULL){ //Serching newNoded's father
                 pre = aux;
                 if(aux->key > value) aux = aux->left;
                 else aux = aux->right;
             }
-            if(pre->key > value) pre->left = newNode;
-            else pre->right = newNode;
-            newNode->father = pre;
+            if(pre->key > value) pre->left = newNoded;
+            else pre->right = newNoded;
+            newNoded->father = pre;
         }
     }
 
     return A;
 }
 
-Tree insertNode(Tree A, Node* newNode){
+Tree insertNoded(Tree A, Noded* newNoded){
     Tree newTree = A;
     
-    newNode->left = NULL; newNode->right = NULL;
+    newNoded->left = NULL; newNoded->right = NULL;
     if(A == NULL){
-        newTree = newNode;
+        newTree = newNoded;
     }else{
-        Node* aux = A, *pre; 
+        Noded* aux = A, *pre; 
         while(aux != NULL){
             pre = aux;
-            if(aux->key > newNode->key) aux = aux->left;
+            if(aux->key > newNoded->key) aux = aux->left;
             else aux = aux->right;
         }
-        if(pre->key > newNode->key) pre->left = newNode;
-        else pre->right = newNode;
+        if(pre->key > newNoded->key) pre->left = newNoded;
+        else pre->right = newNoded;
     }
     return newTree;
 }
 
 int getHeight(Tree A){
     int height, hLeft, hRight;
-    Node * temp = A;
+    Noded * temp = A;
     
     if(A != NULL){
         hLeft = getHeight(temp->left) + 1;
@@ -102,8 +110,8 @@ int getHeight(Tree A){
     return height;
 }
 
-Tree removeTree(Tree A, Node * item){
-    Node * temp, *father, *son;
+Tree removeTree(Tree A, Noded * item){
+    Noded * temp, *father, *son;
 
     if((A != NULL) && (item != NULL)){
         if(item->left == NULL && item->right == NULL){
@@ -139,8 +147,8 @@ Tree removeTree(Tree A, Node * item){
     return A;
 }
 
-Node* getMaximumTree(Tree A){
-    Node* maximum = A;
+Noded* getMaximumTree(Tree A){
+    Noded* maximum = A;
     if(A != NULL){
         while(maximum->right != NULL){
             maximum = maximum->right;
@@ -149,8 +157,8 @@ Node* getMaximumTree(Tree A){
     return maximum;
 }
 
-Node* getMinimum(Tree A){
-    Node* minimum = A;
+Noded* getMinimum(Tree A){
+    Noded* minimum = A;
     if(A != NULL){
         while(minimum->left != NULL){
             minimum = minimum->left;
@@ -159,10 +167,10 @@ Node* getMinimum(Tree A){
     return minimum;
 }
 
-Node* comumAncestor(Tree tree, Node* A, Node* B){
-    Node* ancestor = NULL;
+Noded* comumAncestor(Tree tree, Noded* A, Noded* B){
+    Noded* ancestor = NULL;
     if(tree != NULL){
-        Node* root = tree;
+        Noded* root = tree;
         bool stop = false;
         while(!stop){
             if((A->key < root->key) && (B->key < root->key)){
@@ -176,10 +184,10 @@ Node* comumAncestor(Tree tree, Node* A, Node* B){
     return ancestor;
 }
 
-Node* comumAncestorR(Tree tree, Node* A, Node* B){
-    Node* ancestor = NULL;
+Noded* comumAncestorR(Tree tree, Noded* A, Noded* B){
+    Noded* ancestor = NULL;
     if(tree != NULL){
-        Node* root = tree;
+        Noded* root = tree;
         if((A->key < root->key) && (B->key < root->key)){
             root = comumAncestorR(root->left, A, B);
         }else if((A->key > root->key) && (B->key > root->key)){
@@ -191,10 +199,10 @@ Node* comumAncestorR(Tree tree, Node* A, Node* B){
 }
 
 Tree removeRoot(Tree A){
-    Node* newRoot = NULL;
+    Noded* newRoot = NULL;
     if(A != NULL){
         if(A->left != NULL && A->right != NULL){ // Two sons
-            Node *newRoot = getMinimum(A->right);
+            Noded *newRoot = getMinimum(A->right);
             newRoot->right = A->right;
             newRoot->left = A->left;
             newRoot->father->left = NULL;
@@ -215,7 +223,7 @@ Tree removeRoot(Tree A){
 
 Tree freverter(Tree A){
     if(A != NULL){
-        Node* aux = A->left;
+        Noded* aux = A->left;
         A->left = A->right;
         A->right = A->left;
         freverter(A->right);
@@ -223,17 +231,17 @@ Tree freverter(Tree A){
     }
     return A;
 }
-Tree removeNode(Tree A, int value){
+Tree removeNoded(Tree A, int value){
     if(A != NULL){
-        Node* aux = A;
+        Noded* aux = A;
         while((aux != NULL) && (aux->key != value)){
             if(aux->key > value) aux = aux->left;
             else aux = aux->right;
         }
 
         if(aux != NULL){
-            Node* father = aux->father;
-            Node* son = removeRoot(aux);
+            Noded* father = aux->father;
+            Noded* son = removeRoot(aux);
             son->father = father;
             if(father->key > son->key) father->left = son;
             else father->right = son;
@@ -242,7 +250,7 @@ Tree removeNode(Tree A, int value){
     return A;
 }
 void empty(Tree A){
-    Node *root = A;
+    Noded *root = A;
     
     if(root != NULL){
         empty(root->left);
@@ -252,7 +260,7 @@ void empty(Tree A){
 }
 /*
 void reverse(Tree A){
-    Node* temp;
+    Noded* temp;
     if(A != NULL){
         reverse(A->left);
         reverse(A->right);
@@ -265,14 +273,14 @@ void reverse(Tree A){
 */
 
 /*
-Node* selectTree(Tree A, int value){
+Noded* selectTree(Tree A, int value){
     if((A != NULL) && (value > 0)){
         int count = 0;
         Stack stack = createStack();
-        Node* aux = A;
+        Noded* aux = A;
         bool last = false;
         do{
-            Node* minimum;
+            Noded* minimum;
             if((aux->left != NULL) && (!last)){
                 minimum = aux;
                 while(minimum->left != NULL){
@@ -287,7 +295,7 @@ Node* selectTree(Tree A, int value){
                 last = false; //Entra no primerio if
             }
             else if(aux->right == NULL && aux->left == NULL){
-                aux = (Node *) getTop(stack); stack = popStack(stack);
+                aux = (Noded *) getTop(stack); stack = popStack(stack);
                 last = true;
             }
         }while((count < value) && (!emptyStack(stack)));
@@ -295,27 +303,85 @@ Node* selectTree(Tree A, int value){
 }
 */
 
-Node* select(Tree A, int value){
-    Node* aux = A;
+Noded* select(Tree A, int value){
+    Noded* aux = A, *temp;
     int count = 0;
     Stack stack;
     bool veri = false;
 
     if(A != NULL){
         stack = createStack();
+       
         do{
-            while(aux != NULL && count <= value){
-                aux = push(stack, aux);
+            while(aux != NULL && count < value){
+                stack = pushStack(stack, aux);
                 aux = aux->left;
             }
 
-            if(emptyStack(stack) == false && count <= value){
-                aux = getTop(stack);
+            if(emptyStack(stack) == false && count < value){
+                aux = getTop(stack); 
+                stack = popStack(stack);
+                temp = aux;
+                aux = aux->right;  
                 count ++;
             }else {
                 veri = true;
             }
+             
         }while(veri == false);        
     }
-    return aux;
+    return temp;
+}
+
+int countBigger(Tree A, int value){
+    int count = 0;
+    if(A != NULL){
+        Stack stack = createStack();
+        Noded* aux = A;
+        bool final = false;
+        do{
+            while(aux != NULL){
+                stack = pushStack(stack, aux);
+                aux = aux->left;
+            }
+
+            if(!emptyStack(stack)){
+                aux = getTop(stack); stack = popStack(stack);
+                if(aux->key > value) count++;
+                aux = aux->right;
+            }else final = true;
+        }while(!final);
+    }
+
+    return count;
+}
+
+int getHeightNotR(Tree A){
+    int height = 0;
+
+    if(A != NULL){
+        int amountNodes;
+        Stack queue = createStack();
+        queue = insertQueue(queue, A);
+        bool final = false;
+
+        do{
+            amountNodes = amountElements(queue);
+            if(amountNodes == 0) final = true;
+            else height++;
+
+            while(amountNodes > 0){
+                Noded* aux = getTop(queue); 
+                queue = popQueue(queue);
+                if(aux->left != NULL){
+                    queue = insertQueue(queue, aux->left);
+                }if(aux->right != NULL){
+                    queue = insertQueue(queue, aux->right);
+                }
+                amountNodes--;
+            }
+        }while(!final);
+    }
+
+    return height;
 }
